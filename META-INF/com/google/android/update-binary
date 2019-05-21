@@ -41,8 +41,8 @@ if [ -f /data/adb/magisk/util_functions.sh ]; then
 elif [ -f /data/magisk/util_functions.sh ]; then
   require_new_magisk
 else
-  UF=$TMPDIR/META-INF/com/google/android/unityfiles
-  unzip -oq "$ZIPFILE" 'META-INF/com/google/android/unityfiles/util_functions.sh' -d $TMPDIR >&2
+  UF=$TMPDIR/common/unityfiles
+  unzip -oq "$ZIPFILE" 'common/unityfiles/util_functions.sh' -d $TMPDIR >&2
   [ -f "$UF/util_functions.sh" ] || { ui_print "! Unable to extract zip file !"; exit 1; }
   . $UF/util_functions.sh
 fi
@@ -104,6 +104,8 @@ ui_print "******************************"
 rm -rf $MODPATH 2>/dev/null
 mkdir -p $MODPATH
 
+on_install
+
 # Remove placeholder
 rm -f $MODPATH/system/placeholder 2>/dev/null
 
@@ -124,8 +126,13 @@ $PROPFILE && cp -af $TMPDIR/system.prop $MODPATH/system.prop
 cp -af $TMPDIR/module.prop $MODPATH/module.prop
 if $BOOTMODE; then
   # Update info for Magisk Manager
-  mktouch $NVBASE/modules/$MODID/update
-  cp -af $TMPDIR/module.prop $NVBASE/modules/$MODID/module.prop
+  if imageless_magisk; then
+    mktouch $NVBASE/modules/$MODID/update
+    cp -af $TMPDIR/module.prop $NVBASE/modules/$MODID/module.prop
+  else
+    mktouch /sbin/.magisk/img/$MODID/update
+    cp -af $TMPDIR/module.prop /sbin/.magisk/img/$MODID/module.prop
+  fi
 fi
 
 # post-fs-data mode scripts
@@ -133,8 +140,6 @@ $POSTFSDATA && cp -af $TMPDIR/post-fs-data.sh $MODPATH/post-fs-data.sh
 
 # service mode scripts
 $LATESTARTSERVICE && cp -af $TMPDIR/service.sh $MODPATH/service.sh
-
-on_install
 
 # Handle replace folders
 for TARGET in $REPLACE; do
