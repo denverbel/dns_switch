@@ -1,8 +1,11 @@
+
 # Terminal Magisk Mod Template
 # by veez21 @ xda-developers
 # Modified by @JohnFawkes - Telegram
 # Supersu/all-root compatibility with Unity and @Zackptg5
 # Variables
+
+. /data/adb/modules/dns_switch/logging.sh
 OLDPATH=$PATH
 CACHELOC=<CACHELOC>
 BINPATH=<BINPATH>
