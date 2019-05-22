@@ -508,64 +508,10 @@ curl -s https://api.github.com/repos/jedisct1/dnscrypt-proxy/releases/latest | g
 }
 
 dnscrypt_menu (){
-
-  answer=""
-
-  echo "$div"
-  echo ""
-  echo "${G}***DNSCRYPT DNS MENU***${N}"
-  echo ""
-  echo "$div"
-  echo ""
-  echo -n "${G}Would You Like to Set Up DNSCrypt?${N}" 
-  echo ""
-  echo -n "${R}[CHOOSE] :  ${N}"
-  echo ""
-  read -r answer
-if [ "$choice" = "y" ] || [ "$choice" = "Y" ] || [ "$choice" = "yes" ] || [ "$choice" = "Yes" ] || [ "$choice" = "YES" ]; then
-  get_crypt
-  
-  echo ""
-  echo -n "${G} Would You Like to Enter a Second DNS?${N}"
-  echo ""
-  echo -n "${R} [CHOOSE] :   ${N}"
-  echo ""
-  read -r choice
-  echo ""
-if [ "$choice" = "y" ] || [ "$choice" = "Y" ] || [ "$choice" = "yes" ] || [ "$choice" = "Yes" ] || [ "$choice" = "YES" ]; then
-  echo -n "${G} Please Enter Your Custom DNS2${N}"
-  echo ""
-  echo -n "${R} [CHOOSE]  :  ${N}"
-  echo ""
-  read -r custom2
-  if [ -n $custom2 ]; then
-echo "custom2=$custom2" >> $DNSLOG 2>&1
-setprop net.eth0.dns2 $custom2
-setprop net.dns2 $custom2
-setprop net.ppp0.dns2 $custom2
-setprop net.rmnet0.dns2 $custom2
-setprop net.rmnet1.dns2 $custom2
-setprop net.pdpbr1.dns2 $custom2
-echo "iptables -t nat -A OUTPUT -p udp --dport 53 -j DNAT --to-destination $custom2:53" >> $DNSSERV 2>&1 
-echo "iptables -t nat -I OUTPUT -p udp --dport 53 -j DNAT --to-destination $custom2:53" >> $DNSSERV 2>&1
-  fi
-   if [ -f /system/etc/resolv.conf ]; then
-mkdir -p $MODPATH/system/etc
-cp -f /system/etc/resolv.conf $MODPATH/system/etc
-printf "nameserver $custom\nnameserver $custom2" >> $MODPATH/system/etc/resolv.conf
-set_perm $MODPATH/system/etc/resolv.conf 0 0 0644
-   fi
-else
-echo -n "${R}Return to menu? < y | n > : ${N}"
-read -r mchoice
- if [ "$mchoice" = "y" ]; then
+echo "NOT READY"
+echo "NEXT RELEASE"
+sleep 2
 menu
- else
-echo "${R} Thanks For Using Custom DNS Module By @JohnFawkes - @Telegram/@XDA ${N}"
-sleep 1.5
-clear && quit
- fi
-fi
 }
 
 log_menu () {

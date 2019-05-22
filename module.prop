@@ -1,6 +1,6 @@
 id=dns_switch
 name=DNS Switcher
-version=v4
-versionCode=5
+version=v5
+versionCode=7
 author=JohnFawkes
 description=Systemlessly change DNS Servers Using Terminal

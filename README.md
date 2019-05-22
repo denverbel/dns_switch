@@ -12,6 +12,12 @@ Enter dns_switch -h or dns_switch --help
 -  DNSCRYPT SUPPORT WILL BE ADDED IN NEXT VERSION
 
 ## Change Log
+### v5 - 05.21.2019
+* Unity v4.2 update
+* Start adding ipv6 and dnscrypt support (finished next release)
+* Finally fixed logging.sh error
+* Logging finally merged as a unity addon. Get logging template from my github if you'd like to use logging addon.
+
 ### v4 - 03.28.2019
 * Unity v4 update
 * Move logging into addon
