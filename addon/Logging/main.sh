@@ -1,3 +1,5 @@
+#!/system/bin/sh
+
 # External Tools
 grep_prop() {
   local REGEX="s/^$1=//p"
@@ -7,27 +9,6 @@ grep_prop() {
   sed -n "$REGEX" $FILES 2>/dev/null | head -n 1
 }
 
-NVBASE=/data/adb
-MODDIRNAME=modules_update
-MODULEROOT=$NVBASE/$MODDIRNAME
-MODID=`grep_prop id $TMPDIR/module.prop`
-MODPATH=$MODULEROOT/$MODID
-MOUNTEDROOT=$NVBASE/modules/$MODID
-MODTITLE=$(grep_prop name $TMPDIR/module.prop)
-VER=$(grep_prop version $TMPDIR/module.prop)
-AUTHOR=$(grep_prop author $TMPDIR/module.prop)
-INSTLOG=$MODPATH/$MODID-install.log
-TMPLOG=$MODID_logs.log
-TMPLOGLOC=$MODPATH/$MODID_logs
-
-LOGGERS="
-$CACHELOC/magisk.log
-$CACHELOC/magisk.log.bak
-$MODPATH/$MODID-install.log
-$SDCARD/$MODID-debug.log
-/data/adb/magisk_debug.log
-"
-
 if $BOOTMODE; then
   SDCARD=/storage/emulated/0
 else
@@ -36,17 +17,41 @@ fi
 
 if [ -d /cache ]; then CACHELOC=/cache; else CACHELOC=/data/cache; fi
 
+NVBASE=/data/adb
+MODDIRNAME=modules_update
+MODULEROOT=$NVBASE/$MODDIRNAME
+MODID=`grep_prop id $TMPDIR/module.prop`
+MOUNTEDROOT=$NVBASE/modules
+MODPATH=$MODULEROOT/$MODID
+MODTITLE=$(grep_prop name $TMPDIR/module.prop)
+VER=$(grep_prop version $TMPDIR/module.prop)
+AUTHOR=$(grep_prop author $TMPDIR/module.prop)
+INSTLOG=$MOUNTEDROOT/$MODID-install.log
+TMPLOG=$MODID_logs.log
+TMPLOGLOC=$MOUNTEDROOT/$MODID_logs
+
+LOGGERS="
+$CACHELOC/magisk.log
+$CACHELOC/magisk.log.bak
+INSTLOG=$MOUNTEDROOT/$MODID-install.log
+$LOG
+$oldLOG
+$VERLOG
+$oldVERLOG
+$SDCARD/$MODID-debug.log
+/data/adb/magisk_debug.log
+"
+
 chmod -R 0755 $TMPDIR/addon/Logging
 cp -R $TMPDIR/addon/Logging $UF/tools 2>/dev/null
 PATH=$UF/tools/Logging/:$PATH
-cp_ch -f $UF/tools/Logging/main.sh $MODPATH/logging.sh
-sed -i "1i $SHEBANG" $MODPATH/logging.sh
-sed -i "s|\$TMPDIR|$MOUNTEDROOT|g" $MODPATH/logging.sh
-sed -i "s|\$MODPATH|$MOUNTEDROOT|g" $MODPATH/logging.sh
-sed -i "s|\$INSTLOG|\$LOG|g" $MODPATH/logging.sh
-sed -i "39,50d" $MODPATH/logging.sh
-chmod 0755 $MODPATH/logging.sh
-chown 0.2000 $MODPATH/logging.sh
+cp_ch $UF/tools/Logging/main.sh $MOUNTEDROOT/$MODID/logging.sh
+sed -i "s|\$TMPDIR|$MOUNTEDROOT|g" $MOUNTEDROOT/$MODID/logging.sh
+sed -i "s|\$MODPATH|$MOUNTEDROOT|g" $MOUNTEDROOT/$MODID/logging.sh
+sed -i "s|\$INSTLOG|\$LOG|g" $MOUNTEDROOT/$MODID/logging.sh
+sed -i "40,51d" $MOUNTEDROOT/$MODID/logging.sh
+chmod 0755 $MOUNTEDROOT/$MODID/logging.sh
+chown 0.2000 $MOUNTEDROOT/$MODID/logging.sh
 
 log_handler() {
 	echo "" >> $INSTLOG
@@ -139,8 +144,8 @@ else
 	getprop >> $INSTLOG 2>&1
 fi
 
-# Package the files
-cd $CACHELOC
+# Package the files                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+cd $CACHELOC || exit
 tar -zcvf $MODID_logs.tar.xz $MODID_logs >> $INSTLOG 2>&1
 
 # Copy package to internal storage

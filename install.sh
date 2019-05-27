@@ -70,7 +70,7 @@ print_modname() {
 }
 
 set_permissions() {
-  set_perm $UNITY$BINPATH/dns_switch 0 2000 0777
+  set_perm $UNITY/system/xbin/dns_switch 0 2000 0777
 
   # Note that all files/folders have the $UNITY prefix - keep this prefix on all of your files/folders
   # Also note the lack of '/' between variables - preceding slashes are already included in the variables
@@ -92,10 +92,8 @@ set_permissions() {
 
 # Custom Variables for Install AND Uninstall - Keep everything within this function - runs before uninstall/install
 unity_custom() {
-  BIN=$SYS/bin
-  XBIN=$SYS/xbin
-  if [ -d $XBIN ]; then BINPATH=$XBIN; else BINPATH=$BIN; fi
-  if [ -d /cache ]; then CACHELOC=/cache; else CACHELOC=/data/cache; fi
+  :
+#  if [ -d /cache ]; then CACHELOC=/cache; else CACHELOC=/data/cache; fi
 #  MODTITLE=$(grep_prop name $INSTALLER/module.prop)
 #  VER=$(grep_prop version $INSTALLER/module.prop)
 #	AUTHOR=$(grep_prop author $INSTALLER/module.prop)

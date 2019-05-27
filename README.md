@@ -12,6 +12,9 @@ Enter dns_switch -h or dns_switch --help
 -  DNSCRYPT SUPPORT WILL BE ADDED IN NEXT VERSION
 
 ## Change Log
+### v6 - 05.26.2019
+* Finally all errors fixed
+
 ### v5 - 05.21.2019
 * Unity v4.2 update
 * Start adding ipv6 and dnscrypt support (finished next release)
