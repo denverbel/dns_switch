@@ -28,16 +28,12 @@ VER=$(grep_prop version $TMPDIR/module.prop)
 AUTHOR=$(grep_prop author $TMPDIR/module.prop)
 INSTLOG=$MOUNTEDROOT/$MODID-install.log
 TMPLOG=$MODID_logs.log
-TMPLOGLOC=$MOUNTEDROOT/$MODID_logs
+TMPLOGLOC=$MODULEROOT/$MODID/$MODID_logs
 
 LOGGERS="
 $CACHELOC/magisk.log
 $CACHELOC/magisk.log.bak
-INSTLOG=$MOUNTEDROOT/$MODID-install.log
-$LOG
-$oldLOG
-$VERLOG
-$oldVERLOG
+$MOUNTEDROOT/$MODID-install.log
 $SDCARD/$MODID-debug.log
 /data/adb/magisk_debug.log
 "
@@ -45,13 +41,14 @@ $SDCARD/$MODID-debug.log
 chmod -R 0755 $TMPDIR/addon/Logging
 cp -R $TMPDIR/addon/Logging $UF/tools 2>/dev/null
 PATH=$UF/tools/Logging/:$PATH
-cp_ch $UF/tools/Logging/main.sh $MOUNTEDROOT/$MODID/logging.sh
-sed -i "s|\$TMPDIR|$MOUNTEDROOT|g" $MOUNTEDROOT/$MODID/logging.sh
-sed -i "s|\$MODPATH|$MOUNTEDROOT|g" $MOUNTEDROOT/$MODID/logging.sh
-sed -i "s|\$INSTLOG|\$LOG|g" $MOUNTEDROOT/$MODID/logging.sh
-sed -i "40,51d" $MOUNTEDROOT/$MODID/logging.sh
-chmod 0755 $MOUNTEDROOT/$MODID/logging.sh
-chown 0.2000 $MOUNTEDROOT/$MODID/logging.sh
+mkdir $MODULEROOT/$MODID
+cp -f $UF/tools/Logging/main.sh $MODULEROOT/$MODID/logging.sh
+sed -i "s|\$TMPDIR|$MOUNTEDROOT|g" $MODULEROOT/$MODID/logging.sh
+sed -i "s|\$MODPATH|$MOUNTEDROOT|g" $MODULEROOT/$MODID/logging.sh
+sed -i "s|\$INSTLOG|\$LOG|g" $MODULEROOT/$MODID/logging.sh
+sed -i "40,51d" $MODULEROOT/$MODID/logging.sh
+chmod 0755 $MODULEROOT/$MODID/logging.sh
+chown 0.2000 $MODULEROOT/$MODID/logging.sh
 
 log_handler() {
 	echo "" >> $INSTLOG

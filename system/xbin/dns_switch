@@ -1,13 +1,14 @@
+#!/system/bin/sh
 # Terminal Magisk Mod Template
 # by veez21 @ xda-developers
 # Modified by @JohnFawkes - Telegram
 # Supersu/all-root compatibility with Unity and @Zackptg5
 # Variables
 
-. $MODULEROOT/$MODID/logging.sh
+. $MODULEROOT/$MODID/logging.sh || exit $?
 
 OLDPATH=$PATH
-CACHELOC=<CACHELOC>
+#CACHELOC=<CACHELOC>
 SDCARD=/storage/emulated/0
 TMPLOG=DNSSwitch_logs.log
 TMPLOGLOC=$CACHELOC/DNSSwitch_logs
@@ -19,7 +20,7 @@ quit() {
   exit $?
 }
 
-MODPROP=<MODPROP>
+#MODPROP=<MODPROP>
 $MAGISK && [ ! -f $MODPROP ]
 [ -f $MODPROP ] || { echo "Module not detected!"; quit 1; }
 
@@ -56,26 +57,7 @@ $CACHELOC/DNSSwitch-verbose.log
 $CACHELOC/DNSSwitch-verbose-old.log
 "
 
-#log_handler() {
-#	if [ $(id -u) == 0 ] ; then
-#		echo "" >> $LOG 2>&1
-#		echo -e "$(date +"%m-%d-%Y %H:%M:%S") - $1" >> $LOG 2>&1
-#	fi
-#}
 
-#log_print() {
-#	echo "$1"
-#	log_handler "$1"
-#}
-
-#log_script_chk() {
-#	log_handler "$1"
-#	echo -e "$(date +"%m-%d-%Y %H:%M:%S") - $1" >> $LOG 2>&1
-#}
-
-#get_file_value() {
-#	cat $1 | grep $2 | sed "s|.*$2||" | sed 's|\"||g'
-#}
 
 #ZACKPTG5 BUSYBOX
 #=========================== Set Busybox up
