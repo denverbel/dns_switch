@@ -7,3 +7,4 @@ else
 fi
 patch_script $TMPDIR/system/xbin/dns_switch >> $INSTLOG 2>&1
 
+cp_ch $TMPDIR/logging.sh $MODPATH

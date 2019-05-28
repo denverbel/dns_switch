@@ -139,11 +139,10 @@ MODTITLE=$(get_file_value $TMPDIR/module.prop "name=" | sed 's|-.*||')
 INSTLOG=$MOUNTEDROOT/$MODID/$MODID-install.log
 TMPLOG=$MODID_logs.log
 TMPLOGLOC=$MODULEROOT/$MODID/$MODID_logs
-
 LOGGERS="
 $CACHELOC/magisk.log
 $CACHELOC/magisk.log.bak
-$MOUNTEDROOT/$MODID/$MODID-install.log
+$TMPPATH/$MODID-install.log
 $SDCARD/$MODID-debug.log
 /data/adb/magisk_debug.log
 "
@@ -151,12 +150,11 @@ $SDCARD/$MODID-debug.log
 chmod -R 0755 $TMPDIR/addon/Logging
 cp -R $TMPDIR/addon/Logging $UF/tools 2>/dev/null
 PATH=$UF/tools/Logging/:$PATH
-mkdir -p $MODPATH
-cp -af $UF/tools/Logging/main.sh $MODPATH/logging.sh
-sed -i "s|\$MODPATH|$MOUNTEDROOT/$MODID|g" $MODPATH/logging.sh
-sed -i "s|\$TMPDIR|$MODPATH|g" $MODPATH/logging.sh
-sed -i "s|\$INSTLOG|\$LOG|g" $MODPATH/logging.sh
-sed -i "147,159d" $MODPATH/logging.sh
-chmod 0755 $MODPATH/logging.sh
-chown 0.2000 $MODPATH/logging.sh
+cp -af $UF/tools/Logging/main.sh $TMPDIR/logging.sh
+sed -i "s|\$MODPATH|$MOUNTEDROOT/$MODID|g" $TMPDIR/logging.sh
+sed -i "s|\$TMPDIR|$MODPATH|g" $TMPDIR/logging.sh
+sed -i "s|\$INSTLOG|\$LOG|g" $TMPDIR/logging.sh
+sed -i "150,161d" $TMPDIR/logging.sh
+chmod 0755 $TMPDIR/logging.sh
+chown 0.2000 $TMPDIR/logging.sh
 
