@@ -1,58 +1,11 @@
 #!/system/bin/sh
 
 # External Tools
-grep_prop() {
-  local REGEX="s/^$1=//p"
-  shift
-  local FILES=$@
-  [ -z "$FILES" ] && FILES='/system/build.prop'
-  sed -n "$REGEX" $FILES 2>/dev/null | head -n 1
-}
-
-if $BOOTMODE; then
-  SDCARD=/storage/emulated/0
-else
-  SDCARD=/data/media/0
-fi
-
-if [ -d /cache ]; then CACHELOC=/cache; else CACHELOC=/data/cache; fi
-
-NVBASE=/data/adb
-MODDIRNAME=modules_update
-MODULEROOT=$NVBASE/$MODDIRNAME
-MODID=`grep_prop id $TMPDIR/module.prop`
-MOUNTEDROOT=$NVBASE/modules
-MODPATH=$MODULEROOT/$MODID
-MODTITLE=$(grep_prop name $TMPDIR/module.prop)
-VER=$(grep_prop version $TMPDIR/module.prop)
-AUTHOR=$(grep_prop author $TMPDIR/module.prop)
-INSTLOG=$MOUNTEDROOT/$MODID-install.log
-TMPLOG=$MODID_logs.log
-TMPLOGLOC=$MODULEROOT/$MODID/$MODID_logs
-
-LOGGERS="
-$CACHELOC/magisk.log
-$CACHELOC/magisk.log.bak
-$MOUNTEDROOT/$MODID-install.log
-$SDCARD/$MODID-debug.log
-/data/adb/magisk_debug.log
-"
-
-chmod -R 0755 $TMPDIR/addon/Logging
-cp -R $TMPDIR/addon/Logging $UF/tools 2>/dev/null
-PATH=$UF/tools/Logging/:$PATH
-mkdir $MODULEROOT/$MODID
-cp -f $UF/tools/Logging/main.sh $MODULEROOT/$MODID/logging.sh
-sed -i "s|\$TMPDIR|$MOUNTEDROOT|g" $MODULEROOT/$MODID/logging.sh
-sed -i "s|\$MODPATH|$MOUNTEDROOT|g" $MODULEROOT/$MODID/logging.sh
-sed -i "s|\$INSTLOG|\$LOG|g" $MODULEROOT/$MODID/logging.sh
-sed -i "40,51d" $MODULEROOT/$MODID/logging.sh
-chmod 0755 $MODULEROOT/$MODID/logging.sh
-chown 0.2000 $MODULEROOT/$MODID/logging.sh
-
 log_handler() {
-	echo "" >> $INSTLOG
-	echo -e "$(date +"%m-%d-%Y %H:%M:%S") - $1" >> $INSTLOG 2>&1
+  if [ "$(id -u)" == 0 ] ; then
+	  echo "" >> $INSTLOG
+	  echo -e "$(date +"%Y-%m-%d %H:%M:%S:%N") - $1" >> $INSTLOG 2>&1
+  fi
 }
 
 log_start() {
@@ -83,8 +36,11 @@ log_script_chk() {
 	echo -e "$(date +"%m-%d-%Y %H:%M:%S") - $1" >> $INSTLOG 2>&1
 }
 
+# Finding file values
 get_file_value() {
-	cat $1 | grep $2 | sed "s|.*$2||" | sed 's|\"||g'
+	if [ -f "$1" ]; then
+		grep $2 $1 | sed "s|.*${2}||" | sed 's|\"||g'
+	fi
 }
 
 collect_logs() {
@@ -130,7 +86,10 @@ if $MAGISK; then
 	resetprop >> $INSTLOG 2>&1
 	log_print " Collecting Modules Installed "
   echo "==========================================" >> $INSTLOG 2>&1
-  ls $MODULEROOT >> $INSTLOG 2>&1
+	if [ -d $MODULEROOT ]; then
+  	ls $MODULEROOT >> $INSTLOG 2>&1
+	fi
+	ls $MOUNTEDROOT
   log_print " Collecting Logs for Installed Files "
   echo "==========================================" >> $INSTLOG 2>&1
   log_handler "$(du -ah $MODPATH)" >> $INSTLOG 2>&1
@@ -160,4 +119,44 @@ rm -rf $TMPLOGLOC >> $INSTLOG 2>&1
 log_handler "Logs and information collected."
 }
 
-log_start "Running Log script." >> $INSTLOG 2>&1
+if $BOOTMODE; then
+  SDCARD=/storage/emulated/0
+else
+  SDCARD=/data/media/0
+fi
+
+if [ -d /cache ]; then CACHELOC=/cache; else CACHELOC=/data/cache; fi
+
+NVBASE=/data/adb
+MODDIRNAME=modules_update
+MODULEROOT=$NVBASE/$MODDIRNAME
+MODID=$(get_file_value $TMPDIR/module.prop "id=" | sed 's|-.*||')
+MOUNTEDROOT=$NVBASE/modules
+MODPATH=$MODULEROOT/$MODID
+VER=$(get_file_value version $TMPDIR/module.prop "version=" | sed 's|-.*||')
+AUTHOR=$(get_file_value author $TMPDIR/module.prop "author=" | sed 's|-.*||')
+MODTITLE=$(get_file_value $TMPDIR/module.prop "name=" | sed 's|-.*||')
+INSTLOG=$MOUNTEDROOT/$MODID/$MODID-install.log
+TMPLOG=$MODID_logs.log
+TMPLOGLOC=$MODULEROOT/$MODID/$MODID_logs
+
+LOGGERS="
+$CACHELOC/magisk.log
+$CACHELOC/magisk.log.bak
+$MOUNTEDROOT/$MODID/$MODID-install.log
+$SDCARD/$MODID-debug.log
+/data/adb/magisk_debug.log
+"
+
+chmod -R 0755 $TMPDIR/addon/Logging
+cp -R $TMPDIR/addon/Logging $UF/tools 2>/dev/null
+PATH=$UF/tools/Logging/:$PATH
+mkdir -p $MODPATH
+cp -af $UF/tools/Logging/main.sh $MODPATH/logging.sh
+sed -i "s|\$MODPATH|$MOUNTEDROOT/$MODID|g" $MODPATH/logging.sh
+sed -i "s|\$TMPDIR|$MODPATH|g" $MODPATH/logging.sh
+sed -i "s|\$INSTLOG|\$LOG|g" $MODPATH/logging.sh
+sed -i "147,159d" $MODPATH/logging.sh
+chmod 0755 $MODPATH/logging.sh
+chown 0.2000 $MODPATH/logging.sh
+

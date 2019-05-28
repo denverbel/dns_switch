@@ -92,41 +92,40 @@ set_permissions() {
 
 # Custom Variables for Install AND Uninstall - Keep everything within this function - runs before uninstall/install
 unity_custom() {
-  :
-#  if [ -d /cache ]; then CACHELOC=/cache; else CACHELOC=/data/cache; fi
-#  MODTITLE=$(grep_prop name $INSTALLER/module.prop)
-#  VER=$(grep_prop version $INSTALLER/module.prop)
-#	AUTHOR=$(grep_prop author $INSTALLER/module.prop)
-#	INSTLOG=$CACHELOC/dns_switch_install.log
-#  MAGISK_VER="$(grep MAGISK_VER_CODE /data/adb/magisk/util_functions.sh)"
+  if [ -d /cache ]; then CACHELOC=/cache; else CACHELOC=/data/cache; fi
+  MODTITLE=$(grep_prop name $INSTALLER/module.prop)
+  VER=$(grep_prop version $INSTALLER/module.prop)
+	AUTHOR=$(grep_prop author $INSTALLER/module.prop)
+	INSTLOG=$CACHELOC/dns_switch_install.log
+  MAGISK_VER="$(grep MAGISK_VER_CODE /data/adb/magisk/util_functions.sh)"
 }
 
 # Custom Functions for Install AND Uninstall - You can put them here
 
-#log_handler() {
-#  echo "" >> $INSTLOG 2>&1
-#  echo -e "$(date +"%m-%d-%Y %H:%M:%S") - $1" >> $INSTLOG 2>&1
-#}
+log_handler() {
+  echo "" >> $INSTLOG 2>&1
+  echo -e "$(date +"%m-%d-%Y %H:%M:%S") - $1" >> $INSTLOG 2>&1
+}
 
-#log_start() {
-#	if [ -f "$INSTLOG" ]; then
-#    truncate -s 0 $INSTLOG
-#  else
-#    touch $INSTLOG
-#  fi
-#  echo " " >> $INSTLOG 2>&1
-#  echo "    *******************************************" >> $INSTLOG 2>&1
-#  echo "    *              DNS SWITCHER               *" >> $INSTLOG 2>&1
-#  echo "    *******************************************" >> $INSTLOG 2>&1
-#  echo "    *              VERSION 3.0                *" >> $INSTLOG 2>&1
-#  echo "    *******************************************" >> $INSTLOG 2>&1
-#  echo "    *              BY JOHN FAWKES             *" >> $INSTLOG 2>&1
-#  echo "    *******************************************" >> $INSTLOG 2>&1
-#  echo " " >> $INSTLOG 2>&1
-#  log_handler "Starting module installation script"
-#}
+log_start() {
+	if [ -f "$INSTLOG" ]; then
+    truncate -s 0 $INSTLOG
+  else
+    touch $INSTLOG
+  fi
+  echo " " >> $INSTLOG 2>&1
+  echo "    *******************************************" >> $INSTLOG 2>&1
+  echo "    *              $MODTITLE               *" >> $INSTLOG 2>&1
+  echo "    *******************************************" >> $INSTLOG 2>&1
+  echo "    *              $VER                *" >> $INSTLOG 2>&1
+  echo "    *******************************************" >> $INSTLOG 2>&1
+  echo "    *              BY $AUTHOR             *" >> $INSTLOG 2>&1
+  echo "    *******************************************" >> $INSTLOG 2>&1
+  echo " " >> $INSTLOG 2>&1
+  log_handler "Starting module installation script"
+}
 
-#log_print() {
-#  ui_print "$1"
-#  log_handler "$1"
-#}
+log_print() {
+  ui_print "$1"
+  log_handler "$1"
+}

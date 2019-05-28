@@ -13,6 +13,10 @@ To check if custom dns is working type nslookup <website> into terminal. for exa
 -  DNSCRYPT SUPPORT WILL BE ADDED IN NEXT VERSION
 
 ## Change Log
+### v8 - 05.27.2019
+* Once and for all fix logging errors. (tough bug)
+* Now work can begin on other features!
+
 ### v7 - 05.27.2019
 * Hopefully fix logging.sh errors once and for all
 
