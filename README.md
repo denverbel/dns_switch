@@ -13,6 +13,12 @@ To check if custom dns is working type nslookup <website> into terminal. for exa
 -  DNSCRYPT SUPPORT WILL BE ADDED IN NEXT VERSION
 
 ## Change Log
+### v10 - 08.02.2019
+* Fix logging (remove as unity addon)
+* Rebase entire mod on offical temolate
+* Make a few ui_prints more clear
+* Next update will have more features. This was more of a stability update more than anything
+
 ### v8 - 05.27.2019
 * Once and for all fix logging errors. (tough bug)
 * Now work can begin on other features!
