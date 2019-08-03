@@ -12,8 +12,8 @@ return_menu() {
   esac
 }
 
-# DNSLoggers
-DNSLOGGERS="
+# Loggers
+LOGGERS="
 $CACHELOC/magisk.log
 $CACHELOC/magisk.log.bak
 $MODPATH/${MODID}-install.log
@@ -65,14 +65,13 @@ echo " " >> $DNSLOG 2>&1
 log_script_chk "Log start."
 }
 
-# PRINT MOD NAME
 collect_logs() {
 log_handler "Collecting logs and information."
 	# Create temporary directory
-	mkdir -pv $TMPDNSLOGLOC >> $DNSLOG 2>&1
+	mkdir -pv $TMPLOGLOC >> $DNSLOG 2>&1
 
-	# Saving Magisk and module DNSlog files and device original build.prop
-	for ITEM in $DNSLOGGERS; do
+	# Saving Magisk and module log files and device original build.prop
+	for ITEM in $LOGGERS; do
 		if [ -f "$ITEM" ]; then
 			case "$ITEM" in
 				*build.prop*)	BPNAME="build_$(echo $ITEM | sed 's|\/build.prop||' | sed 's|.*\/||g').prop"
@@ -80,7 +79,7 @@ log_handler "Collecting logs and information."
 				*)	BPNAME=""
 				;;
 			esac
-			cp -af $ITEM ${TMPDNSLOGLOC}/${BPNAME} >> $DNSLOG 2>&1
+			cp -af $ITEM ${TMPLOGLOC}/${BPNAME} >> $DNSLOG 2>&1
 		else
 			case "$ITEM" in
 				*/cache)
@@ -91,7 +90,7 @@ log_handler "Collecting logs and information."
 					fi
 					ITEMTPM=$(echo $ITEM | sed 's|$CACHELOC|$CACHELOCTMP|')
 					if [ -f "$ITEMTPM" ]; then
-						cp -af $ITEMTPM $TMPDNSLOGLOC >> $DNSLOG 2>&1
+						cp -af $ITEMTPM $TMPLOGLOC >> $DNSLOG 2>&1
 					else
 						log_handler "$ITEM not available."				
           fi
@@ -128,12 +127,9 @@ else
 fi
 
 # Remove temporary directory
-rm -rf $TMPDNSLOGLOC >> $DNSLOG 2>&1
+rm -rf $TMPLOGLOC >> $DNSLOG 2>&1
 log_handler "Logs and information collected."
 }
-
-# Load functions
-log_start "Running Log script." >> $DNSLOG 2>&
 
 # Find prop type
 get_prop_type() {
@@ -191,24 +187,26 @@ sleep 2
 menu
 }
 
-DNSlog_menu () DNSlogresponse=""
+log_menu () {
+
+logresponse=""
 choice=""
 
   echo "$div"
   echo "" 
-  echo "${G}***DNSLOGGING MAIN MENU***${N}"
+  echo "${G}***LOGGING MAIN MENU***${N}"
   echo ""
   echo "$div"
   echo ""
-  echo "${G}Do You Want To Take DNSLogs?${N}"
+  echo "${G}Do You Want To Take Logs?${N}"
   echo ""
   echo -n "${Y}Enter (y)es or (n)o${N}"
   echo ""
   echo -n "${R}[CHOOSE] :  ${N}"
-  read -r DNSlogresponse
-case $DNSlogresponse in
+  read -r logresponse
+case $logresponse in
   y|Y|yes|Yes|YES)
-  upload_DNSlogs
+  upload_logs
   ;;
   *)
   return_menu
@@ -218,8 +216,8 @@ esac
 
 dns_remove () {
 
-custom=$(echo $(get_file_value $DNSDNSLOG "custom=") | sed 's|-.*||')
-custom2=$(echo $(get_file_value $DNSDNSLOG "custom2=") | sed 's|-.*||')
+custom=$(echo $(get_file_value $DNSLOG "custom=") | sed 's|-.*||')
+custom2=$(echo $(get_file_value $DNSLOG "custom2=") | sed 's|-.*||')
 
 resetprop --delete net.eth0.dns1
 resetprop --delete net.eth0.dns2
@@ -286,11 +284,11 @@ choice=""
   echo ""
   read -r custom
 if [ -n $custom ]; then
-  touch $DNSDNSLOG
-  set_perm $DNSDNSLOG 0 0 0644
-  truncate -s 0 $DNSDNSLOG
+  touch $DNSLOG
+  set_perm $DNSLOG 0 0 0644
+  truncate -s 0 $DNSLOG
   truncate -s 0 $DNSSERV
-  echo "custom=$custom" >> $DNSDNSLOG 2>&1
+  echo "custom=$custom" >> $DNSLOG 2>&1
   setprop net.eth0.dns1 $custom
   setprop net.dns1 $custom
   setprop net.ppp0.dns1 $custom
@@ -317,7 +315,7 @@ case $choice in
   echo ""
   read -r custom2
   if [ -n $custom2 ]; then
-    echo "custom2=$custom2" >> $DNSDNSLOG 2>&1
+    echo "custom2=$custom2" >> $DNSLOG 2>&1
     setprop net.eth0.dns2 $custom2
     setprop net.dns2 $custom2
     setprop net.ppp0.dns2 $custom2

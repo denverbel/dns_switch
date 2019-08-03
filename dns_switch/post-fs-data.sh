@@ -25,7 +25,7 @@ fi
 
 if [ -d /cache ]; then CACHELOC=/cache; else CACHELOC=/data/cache; fi
 
-mv $CACHELOC/dns_switch_install.log $MODPATH 2>/dev/null
+mv $CACHELOC/${MODID}_install.log $MODPATH 2>/dev/null
 
 if ! mount -o remount,rw /sbin 2>/dev/null; then
   cp -a /sbin /dev/.sbin

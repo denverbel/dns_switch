@@ -1,8 +1,8 @@
-
+#!/system/bin/sh
 # Terminal Magisk Mod Template
 # by veez21 @ xda-developers
 # Modified by @JohnFawkes - Telegram
-# Supersu/all-root compatibility with Unity and @Zackptg5
+# Help from @Zackptg5
 # Variables
 
 OLDPATH=$PATH

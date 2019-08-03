@@ -123,7 +123,7 @@ REPLACE="
 
 print_modname() {
   ui_print "*******************************"
-  ui_print "           DNS Switcher         "
+  ui_print "           DNS Switcher        "
   ui_print "*******************************"
 }
 
@@ -139,6 +139,7 @@ on_install() {
   unzip -o "$ZIPFILE" "$MODID/*" -d ${MODPATH%/*}/ >&2
   cp -f $TMPDIR/curl-$ARCH32 $MODPATH/curl
   cp -f $TMPDIR/sleep-$ARCH32 $MODPATH/sleep
+    imageless_magisk || sed -i "s|MODPATH=/data/adb/modules/$MODID|MODPATH=/sbin/.magisk/img/$MODID|" $TMPDIR/dns_switch.sh
 }
 
 # Only some special files require specific permissions
