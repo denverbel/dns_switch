@@ -38,8 +38,8 @@ else
 fi
 
 # Load Needed Functions
-if [ -f $MODPATH/${MODID}-functions ]; then
-  . $MODPATH/${MODID}-functions
+if [ -f $MODPATH/${MODID}-functions.sh ]; then
+  . $MODPATH/${MODID}-functions.sh
 else
   echo "! Can't find functions script! Aborting!"; exit 1
 fi

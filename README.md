@@ -2,6 +2,7 @@
 DNS Switch allows you to change your dns systemlessly with terminal. Type su then dns_switch in terminal to enter the menu. Select custom DNS to enter the DNS you would like to use. 
 Enter dns_switch -h or dns_switch --help
 To check if custom dns is working type nslookup <website> into terminal. for example nslookup google.com.
+A new feature has been added thanks to @vr25. Now you can use dns_switch updates without having to reboot! Everything is now symlinked to /sbin
 
 ## Compatibility
 * All Devices 
@@ -13,6 +14,9 @@ To check if custom dns is working type nslookup <website> into terminal. for exa
 -  DNSCRYPT SUPPORT WILL BE ADDED IN NEXT VERSION
 
 ## Change Log
+###v12 - 2019.08.03
+* Fix functions.sh not found error
+
 ### v11 - 2019.08.03
 * Fix some typos
 * Fix no shebang (script will now run) Sorry about that guys
